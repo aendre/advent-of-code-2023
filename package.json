@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@dagrejs/graphlib": "^2.1.13",
+    "ansis": "^2.0.2",
     "axios": "^1.6.2",
     "lodash": "^4.17.21",
     "mathjs": "^12.1.0",

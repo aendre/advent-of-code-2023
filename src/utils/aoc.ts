@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import _ from 'lodash';
+import { red, blue, yellow } from 'ansis';
 import { createTemplate } from './template.js';
 
 export function leadingZeroDay(day: string | number) {
@@ -19,22 +20,35 @@ export const puzzle = {
 };
 
 export function startDay() {
-  console.log('\x1b[33m%s\x1b[0m', `\n 🎄 ${puzzle.year}, Day ${puzzle.dday}`); // cyan
+  console.log(red(`\n\n 🎄 ${puzzle.year}, Day ${puzzle.dday}`));
   createTemplate(puzzle.dirName);
 }
 
 export function endDay() {
-  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------');
+  console.log(red('----------------------------------------------------------'));
   console.timeEnd('AoC execution');
 }
 
 export function readInput(filename: string) {
-  console.log('\x1b[33m%s\x1b[0m', ` 🚀 ${filename}`);
-  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------');
+  console.log(red(` 🚀 ${filename}`));
+  console.log(red('----------------------------------------------------------'));
   const filePath = `src/${puzzle.dirName}/${filename}`;
   const fileContent = fs.readFileSync(filePath, 'utf8');
   console.time('AoC execution');
   return fileContent;
+}
+
+export function part(nr: number, solution: unknown) {
+  console.log(blue('>'));
+  console.log(blue(`> 🎉 Part ${nr}: `), blue.bold(`${solution}`));
+  console.log(blue('>'));
+}
+
+export function part1(solution: unknown) {
+  part(1, solution)
+}
+export function part2(solution: unknown) {
+  part(2, solution)
 }
 
 export function input() {
@@ -64,7 +78,7 @@ export async function autoDownload() {
   const aocDate = new Date(`${year}-12-${dday}`);
 
   if (aocDate > now) {
-    console.log('\x1b[33m%s\x1b[0m', ' 🏗️  No input downloaded from the future');
+    console.log(yellow(' 🏗️  No input downloaded from the future'));
     return;
   }
 
@@ -76,7 +90,7 @@ export async function autoDownload() {
     fs.writeFileSync(filePath, content, {
       encoding: 'utf8',
     });
-    console.log('\x1b[33m%s\x1b[0m', ` 🏗️  New input downloaded: ${filePath}`);
+    console.log(yellow(` 🏗️  New input downloaded: ${filePath}`));
   }
 }
 

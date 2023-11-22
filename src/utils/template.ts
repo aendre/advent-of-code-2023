@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { yellow } from 'ansis';
 
 export const solveTemplate = `import _ from 'lodash';
 import math from '../utils/math.js'
@@ -7,7 +8,9 @@ import * as aoc from '../utils/aoc.js';
 export default function solve() {
   const input = aoc.inputE();
 
-  console.log('Input', input)
+  console.log('Input:', input)
+  // aoc.part1(123)
+  // aoc.part2(456)
 }
 `;
 export function createTemplate(dirName: string) {
@@ -23,6 +26,6 @@ export function createTemplate(dirName: string) {
     fs.writeFileSync(exampleFile, 'example', {
       encoding: 'utf-8',
     });
-    console.log('\x1b[33m%s\x1b[0m', ` 🔧 AoC file structure created at ${dir}`);
+    console.log(yellow(` 🔧 AoC file structure created at ${dir}`));
   }
 }
