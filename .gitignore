@@ -1,0 +1,9 @@
+# Ignore the black hole
+node_modules
+
+# Ignore built files
+dist
+build
+
+# ignore the file containing the sessionID
+.session.cfg

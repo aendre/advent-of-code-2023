@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "overrides": [
+  ],
+  "plugins": ["no-autofix"],
+  "rules": {
+    "no-console": "off",
+    "max-len": "off",
+    "import/prefer-default-export" : "off",
+    "semi": "off",
+    "arrow-parens": ["error", "as-needed"],
+    "default-case": "off",
+    //https://stackoverflow.com/questions/45443478/eslint-autofix-ignore-rule
+    "prefer-const": "off",
+    "no-autofix/prefer-const": "warn",
+    "import/extensions": "off"
+  }
+}
