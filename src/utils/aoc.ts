@@ -3,43 +3,45 @@ import * as fs from 'fs';
 import _ from 'lodash';
 import { createTemplate } from './template.js';
 
-const dayOfAoc = process.argv[2] || new Date().getDate();
-const yearOfAoc = process.argv[3] || new Date().getFullYear().toString();
-
 export function leadingZeroDay(day: string | number) {
   return (`0${day}`).slice(-2); // Day with leadin zeroes
 }
 
+const dayOfAoc = process.argv[2] || new Date().getDate();
+const yearOfAoc = process.argv[3] || new Date().getFullYear().toString();
+const dayOfAocWithLeadingZeros = leadingZeroDay(dayOfAoc);
+
 export const puzzle = {
   day: dayOfAoc,
-  dday: leadingZeroDay(dayOfAoc),
+  dday: dayOfAocWithLeadingZeros,
   year: yearOfAoc,
-}
+  dirName: `${yearOfAoc}-day-${dayOfAocWithLeadingZeros}`,
+};
 
 export function startDay() {
   console.log('\x1b[33m%s\x1b[0m', `\n 🎄 ${puzzle.year}, Day ${puzzle.dday}`); // cyan
-  createTemplate(puzzle.dday)
+  createTemplate(puzzle.dirName);
 }
 
 export function endDay() {
-  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------')
-  console.timeEnd('AoC execution')
+  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------');
+  console.timeEnd('AoC execution');
 }
 
 export function readInput(filename: string) {
   console.log('\x1b[33m%s\x1b[0m', ` 🚀 ${filename}`);
-  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------')
-  const filePath = `src/day-${puzzle.dday}/${filename}`;
+  console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------');
+  const filePath = `src/${puzzle.dirName}/${filename}`;
   const fileContent = fs.readFileSync(filePath, 'utf8');
-  console.time('AoC execution')
-  return fileContent
+  console.time('AoC execution');
+  return fileContent;
 }
 
 export function input() {
-  return readInput('input.txt')
+  return readInput('input.txt');
 }
 export function inputE() {
-  return readInput('example.txt')
+  return readInput('example.txt');
 }
 
 export async function downloadInput(year: string, day: string | number, sessionCookie: string) {
@@ -54,25 +56,26 @@ export async function downloadInput(year: string, day: string | number, sessionC
   return response.data.replace(/\n$/, '');
 }
 
-export async function autoDownload(day: string | number) {
-  const dayday = leadingZeroDay(day);
-  const { year } = puzzle;
+export async function autoDownload() {
+  const {
+    year, dday, day, dirName,
+  } = puzzle;
   const now = new Date();
-  const aocDate = new Date(`${year}-12-${dayday}`)
+  const aocDate = new Date(`${year}-12-${dday}`);
 
   if (aocDate > now) {
     console.log('\x1b[33m%s\x1b[0m', ' 🏗️  No input downloaded from the future');
-    return
+    return;
   }
 
   const sessionCookie = fs.readFileSync('.session.cfg', 'utf-8');
-  const filePath = `src/day-${dayday}/input.txt`;
+  const filePath = `src/${dirName}/input.txt`;
 
   if (!fs.existsSync(filePath)) {
-    const content = await downloadInput(year, day, sessionCookie)
+    const content = await downloadInput(year, day, sessionCookie);
     fs.writeFileSync(filePath, content, {
       encoding: 'utf8',
-    })
+    });
     console.log('\x1b[33m%s\x1b[0m', ` 🏗️  New input downloaded: ${filePath}`);
   }
 }
@@ -98,74 +101,74 @@ export function patternMatch(str: string, matcher:string) {
       regexp: '(\\d*\\.\\d+)',
       initializer: Number,
     },
-  }
+  };
 
-  const tokenMatcher = `${Object.keys(regExpMap).map(_.escapeRegExp).map(c => `(${c})`).join('|')}`
+  const tokenMatcher = `${Object.keys(regExpMap).map(_.escapeRegExp).map(c => `(${c})`).join('|')}`;
 
-  const tokens = matcher.match(new RegExp(tokenMatcher, 'g'))
+  const tokens = matcher.match(new RegExp(tokenMatcher, 'g'));
   if (tokens === null) {
-    throw new Error('No tokens were found in the input string')
+    throw new Error('No tokens were found in the input string');
   }
 
   let inputMatcherRegExp = matcher;
   Object.keys(regExpMap).forEach(key => {
-    inputMatcherRegExp = inputMatcherRegExp.replace(new RegExp(_.escapeRegExp(key), 'g'), regExpMap[key].regexp)
-  })
+    inputMatcherRegExp = inputMatcherRegExp.replace(new RegExp(_.escapeRegExp(key), 'g'), regExpMap[key].regexp);
+  });
 
   let matches = str.match(new RegExp(inputMatcherRegExp));
 
   if (matches === null) {
-    return tokens.map(t => null)
+    return tokens.map(t => null);
   }
   // Drop the full match
   matches = matches.slice(1) as RegExpMatchArray;
 
   // Safe check
   if (matches.length !== tokens.length || matches.length < 1) {
-    return tokens.map(t => null)
+    return tokens.map(t => null);
   }
 
   // Return inputs in the matching type
-  return matches.map((match, index) => regExpMap[tokens[index]].initializer(match))
+  return matches.map((match, index) => regExpMap[tokens[index]].initializer(match));
 }
 
 export class AocInput {
-  private content: string
+  private content: string;
 
-  private usedFile: string
+  private usedFile: string;
 
-  static EXAMPLE_FILE = 'example.txt'
+  static EXAMPLE_FILE = 'example.txt';
 
-  static REAL_INPUT = 'input.txt'
+  static REAL_INPUT = 'input.txt';
 
   private useInput(inputFile:string) {
-    this.usedFile = inputFile
+    this.usedFile = inputFile;
   }
 
   private load() {
-    this.content = readInput(this.usedFile)
+    this.content = readInput(this.usedFile);
   }
 
   useExample() {
     this.useInput(AocInput.EXAMPLE_FILE);
-    this.load()
-    return this
+    this.load();
+    return this;
   }
 
   useRealInput() {
     this.useInput(AocInput.REAL_INPUT);
-    this.load()
-    return this
+    this.load();
+    return this;
   }
 
   get raw() {
     if (typeof this.content !== 'string' || this.content.length < 1) {
-      throw Error(`Input (${this.usedFile}) was not read or empty.`)
+      throw Error(`Input (${this.usedFile}) was not read or empty.`);
     }
-    return this.content
+    return this.content;
   }
 
   get lines() {
-    return this.raw.split('\n')
+    return this.raw.split('\n');
   }
 }

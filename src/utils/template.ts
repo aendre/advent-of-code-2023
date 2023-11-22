@@ -10,19 +10,19 @@ export default function solve() {
   console.log('Input', input)
 }
 `;
-export function createTemplate(day: string) {
-  const dir = `src/day-${day}/`
-  const solveFile = `${dir}solve.ts`
-  const exampleFile = `${dir}example.txt`
+export function createTemplate(dirName: string) {
+  const dir = `src/${dirName}/`;
+  const solveFile = `${dir}solve.ts`;
+  const exampleFile = `${dir}example.txt`;
 
   if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
+    fs.mkdirSync(dir);
     fs.writeFileSync(solveFile, solveTemplate, {
       encoding: 'utf-8',
-    })
+    });
     fs.writeFileSync(exampleFile, 'example', {
       encoding: 'utf-8',
-    })
-    console.log('\x1b[33m%s\x1b[0m', ` 🔧 AoC file structure created for Day ${day}`);
+    });
+    console.log('\x1b[33m%s\x1b[0m', ` 🔧 AoC file structure created at ${dir}`);
   }
 }
