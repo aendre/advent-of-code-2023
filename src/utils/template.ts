@@ -10,7 +10,7 @@ export default function solve() {
   console.log('Input', input)
 }
 `;
-export function createTemplate(day) {
+export function createTemplate(day: string) {
   const dir = `src/day-${day}/`
   const solveFile = `${dir}solve.ts`
   const exampleFile = `${dir}example.txt`

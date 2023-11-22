@@ -1,5 +1,6 @@
-import math from './math.js'
+import math from '../utils/math.js'
 
+export type Coordinate = [number, number];
 
 export enum Direction {
   Left = 'LEFT',

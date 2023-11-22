@@ -1,5 +1,6 @@
 # Ignore the black hole
 node_modules
+package-lock.json
 
 # Ignore built files
 dist

@@ -6,7 +6,7 @@ import { createTemplate } from './template.js';
 const dayOfAoc = process.argv[2] || new Date().getDate();
 const yearOfAoc = process.argv[3] || new Date().getFullYear().toString();
 
-export function leadingZeroDay(day) {
+export function leadingZeroDay(day: string | number) {
   return (`0${day}`).slice(-2); // Day with leadin zeroes
 }
 
@@ -26,10 +26,7 @@ export function endDay() {
   console.timeEnd('AoC execution')
 }
 
-/**
- * @param {string} filename - Name of the file
- */
-export function readInput(filename) {
+export function readInput(filename: string) {
   console.log('\x1b[33m%s\x1b[0m', ` 🚀 ${filename}`);
   console.log('\x1b[32m%s\x1b[0m', '----------------------------------------------------------')
   const filePath = `src/day-${puzzle.dday}/${filename}`;
@@ -45,12 +42,7 @@ export function inputE() {
   return readInput('example.txt')
 }
 
-/**
- * @param {string} year - YYYY
- * @param {string} day - DD
- * @param {string} sessionCookie - Its a has that represents the cookie
- */
-export async function downloadInput(year, day, sessionCookie) {
+export async function downloadInput(year: string, day: string | number, sessionCookie: string) {
   const response = await axios.get(`https://adventofcode.com/${year}/day/${day}/input`, {
     withCredentials: true,
     headers: {
@@ -62,10 +54,7 @@ export async function downloadInput(year, day, sessionCookie) {
   return response.data.replace(/\n$/, '');
 }
 
-/**
- * @param {string} day - DD
- */
-export async function autoDownload(day) {
+export async function autoDownload(day: string | number) {
   const dayday = leadingZeroDay(day);
   const { year } = puzzle;
   const now = new Date();
@@ -88,10 +77,11 @@ export async function autoDownload(day) {
   }
 }
 
-export function patternMatch(str, matcher) {
+export function patternMatch(str: string, matcher:string) {
   // https://digitalfortress.tech/tips/top-15-commonly-used-regex/
   // https://javascript.plainenglish.io/the-7-most-commonly-used-regular-expressions-in-javascript-bb4e98288ca6
-  const regExpMap = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const regExpMap:Record<string, { regexp:string, initializer:(input:string) => any }> = {
     $int: {
       regexp: '(\\d+)',
       initializer: Number,
@@ -128,7 +118,7 @@ export function patternMatch(str, matcher) {
     return tokens.map(t => null)
   }
   // Drop the full match
-  matches = matches.slice(1);
+  matches = matches.slice(1) as RegExpMatchArray;
 
   // Safe check
   if (matches.length !== tokens.length || matches.length < 1) {
@@ -140,16 +130,19 @@ export function patternMatch(str, matcher) {
 }
 
 export class AocInput {
+  private content: string
+
+  private usedFile: string
 
   static EXAMPLE_FILE = 'example.txt'
 
   static REAL_INPUT = 'input.txt'
 
-  useInput(inputFile) {
+  private useInput(inputFile:string) {
     this.usedFile = inputFile
   }
 
-  load() {
+  private load() {
     this.content = readInput(this.usedFile)
   }
 
