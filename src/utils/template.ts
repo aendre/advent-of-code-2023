@@ -3,14 +3,16 @@ import { yellow } from 'ansis';
 
 export const solveTemplate = `import _ from 'lodash';
 import math from '../utils/math.js'
-import * as aoc from '../utils/aoc.js';
+import { AocPuzzle } from '../utils/aoc.js';
+import { patternMatch } from '../utils/patterns.js';
 
-export default function solve() {
-  const input = aoc.inputE();
+export default function solve(aoc: AocPuzzle) {
+  const rows = aoc.inputE.split('\\n')
+  // .map(row => parseInt(row, 10))
+  console.log(rows)
 
-  console.log('Input:', input)
-  // aoc.part1(123)
-  // aoc.part2(456)
+  // aoc.part1('changeme')
+  // aoc.part2('changeme2')
 }
 `;
 export function createTemplate(dirName: string) {
