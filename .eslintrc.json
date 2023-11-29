@@ -20,13 +20,14 @@
       "no-console": "off",
       "max-len": "off",
       "import/prefer-default-export" : "off",
-      "semi": "off",
+      "semi": 1,
       "@typescript-eslint/semi": "off",
       "arrow-parens": ["error", "as-needed"],
       "@typescript-eslint/no-unused-vars": "off",
       "default-case": "off",
       //https://stackoverflow.com/questions/45443478/eslint-autofix-ignore-rule
       "prefer-const": "off",
-      "no-autofix/prefer-const": "warn"
+      "no-autofix/prefer-const": "warn",
+      "@typescript-eslint/no-throw-literal": "off"
     }
 }
