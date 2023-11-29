@@ -1,4 +1,4 @@
-import math from '../utils/math.js'
+import math from '../utils/math.js';
 
 export type Coordinate = [number, number];
 
@@ -25,8 +25,8 @@ export function moveOnCartesianCoordinateSystem(direction: Direction) {
     [Direction.DiagonalDownLeft]: [-1, -1],
     [Direction.DiagonalDownRight]: [1, -1],
     [Direction.StayStill]: [0, 0],
-  }
-  return map[direction]
+  };
+  return map[direction];
 }
 
 export function moveOnCanvas(direction: Direction) {
@@ -40,8 +40,8 @@ export function moveOnCanvas(direction: Direction) {
     [Direction.DiagonalDownLeft]: [-1, 1],
     [Direction.DiagonalDownRight]: [1, 1],
     [Direction.StayStill]: [0, 0],
-  }
-  return map[direction]
+  };
+  return map[direction];
 }
 
 export function commandToDirection(command:string): Direction {
@@ -104,78 +104,78 @@ export function commandToDirection(command:string): Direction {
 type IsUnkown<T> = T extends unknown ? T : never
 
 export class Point2D<T = unknown> {
-  private point : Coordinate
+  private point : Coordinate;
 
-  content : IsUnkown<T> | undefined
+  content : IsUnkown<T> | undefined;
 
   constructor(p: Coordinate, c?: IsUnkown<T>) {
-    this.point = p
-    this.content = c
+    this.point = p;
+    this.content = c;
   }
 
   stepOnCartesian(d: string | Direction | undefined) {
-    const direction = commandToDirection(`${d}`)
-    return this.move(moveOnCartesianCoordinateSystem(direction))
+    const direction = commandToDirection(`${d}`);
+    return this.move(moveOnCartesianCoordinateSystem(direction));
   }
 
   stepOnCanvas(d: string | Direction | undefined) {
-    const direction = commandToDirection(`${d}`)
-    return this.move(moveOnCanvas(direction))
+    const direction = commandToDirection(`${d}`);
+    return this.move(moveOnCanvas(direction));
   }
 
   move(moveBy: Coordinate) {
-    return new Point2D(math.add(this.point, moveBy), this.content)
+    return new Point2D(math.add(this.point, moveBy), this.content);
   }
 
   setX(x: number) {
-    return new Point2D([x, this.y], this.content)
+    return new Point2D([x, this.y], this.content);
   }
 
   setY(y: number) {
-    return new Point2D([this.x, y], this.content)
+    return new Point2D([this.x, y], this.content);
   }
 
   is(check:Coordinate):boolean {
-    return check[0] === this.x && check[1] === this.y
+    return check[0] === this.x && check[1] === this.y;
   }
 
   isInXRange(min:number, max: number) {
-    return this.x > min && this.x < max
+    return this.x > min && this.x < max;
   }
 
   isInXRangeInclusive(min:number, max: number) {
-    return this.x >= min && this.x <= max
+    return this.x >= min && this.x <= max;
   }
 
   isInYRange(min:number, max: number) {
-    return this.y > min && this.y < max
+    return this.y > min && this.y < max;
   }
 
   isInYRangeInclusive(min:number, max: number) {
-    return this.y >= min && this.y <= max
+    return this.y >= min && this.y <= max;
   }
 
   get key() {
-    return `${this.x}-${this.y}`
+    return `${this.x}-${this.y}`;
   }
 
   get x() {
-    return this.point[0]
+    return this.point[0];
   }
 
   get y() {
-    return this.point[1]
+    return this.point[1];
   }
 
   get xy() {
-    return this.point
+    return this.point;
   }
 
   toObject() {
     return {
       x: this.x,
       y: this.y,
-    }
+    };
   }
 }
 
@@ -189,5 +189,20 @@ export function boundingBox(points: Point2D[]) {
       min: Math.min(...points.map(c => c.y)),
       max: Math.max(...points.map(c => c.y)),
     },
+  };
+}
+
+export function oppositeDirection(direction: Direction) : Direction {
+  switch (direction) {
+    case Direction.Down: return Direction.Up;
+    case Direction.Up: return Direction.Down;
+    case Direction.Left: return Direction.Right;
+    case Direction.Right: return Direction.Left;
+    case Direction.StayStill: return Direction.StayStill;
+    case Direction.DiagonalDownLeft: return Direction.DiagonalUpRight;
+    case Direction.DiagonalUpRight: return Direction.DiagonalDownLeft;
+    case Direction.DiagonalDownRight: return Direction.DiagonalUpLeft;
+    case Direction.DiagonalUpLeft: return Direction.DiagonalDownRight;
+    default: return direction;
   }
 }

@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ESNext",
     "module": "ESNext",
     "lib": [
-      "es2018"
+      "ESNext"
     ],
     "allowSyntheticDefaultImports": true,
     "declaration": true,
