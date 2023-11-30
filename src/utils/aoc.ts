@@ -15,8 +15,13 @@ export type AocPuzzle = {
   puzzle: AocPuzzleInfo,
   input: string, // content of input.txt
   inputE: string, // content of example.txt
+  parseInt: (input: string) => number
   part1: (result: unknown) => void
   part2: (result: unknown) => void
+}
+
+function parseAsInt(input: string) {
+  return parseInt(input, 10)
 }
 
 function leadingZeroDay(day: string | number) {
@@ -117,6 +122,7 @@ export async function startDay() {
     inputE: exampleInput,
     part1,
     part2,
+    parseInt: parseAsInt,
   }
 
   console.log(red('----------------------------------------------------------'));

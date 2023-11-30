@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import { yellow } from 'ansis';
 
-export const solveTemplate = `import _ from 'lodash';
-import math from '../utils/math.js'
+export const solveTemplate = `import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
-import { patternMatch } from '../utils/patterns.js';
 
 export default function solve(aoc: AocPuzzle) {
-  const input = aoc.inputE.split('\\n')
-  // .map(row => parseInt(row, 10))
+  const input = aoc.inputE
+  //  .lines()
+  //  .map(aoc.parseInt)
+
   console.log(input)
 
   // aoc.part1('changeme')

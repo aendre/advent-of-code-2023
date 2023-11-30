@@ -1,5 +1,22 @@
-import _ from 'lodash';
+import _ from 'lodash'
+import { create, all } from 'mathjs'
 
+/**
+ * Re-export lodash
+ */
+export { _ };
+
+/**
+ * Export math as an ES6 module
+ *
+ * Read more: https://mathjs.org/docs/getting_started.html#es-modules
+ */
+const mathConfig = { }
+export const math = create(all, mathConfig)
+
+/**
+ *  Match tokens from string
+ */
 export function patternMatch(str: string, matcher:string) {
   // https://digitalfortress.tech/tips/top-15-commonly-used-regex/
   // https://javascript.plainenglish.io/the-7-most-commonly-used-regular-expressions-in-javascript-bb4e98288ca6

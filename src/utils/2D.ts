@@ -1,4 +1,4 @@
-import math from '../utils/math.js';
+import { math } from '../utils/libs.js';
 
 export type Coordinate = [number, number];
 

@@ -1,11 +1,9 @@
-import _ from 'lodash';
-import math from '../utils/math.js';
+import { _, math, patternMatch } from '../utils/libs.js'
 import { AocPuzzle } from '../utils/aoc.js';
-import { patternMatch } from '../utils/patterns.js';
 import { Point2D } from '../utils/2D.js';
 
 export default function solve(aoc: AocPuzzle) {
-  const rows = aoc.input.split('\n')
+  const rows = aoc.input.lines()
     .map(row => {
       const [command, step] = row.split(' ')
       return { command, step: parseInt(step, 10) }
