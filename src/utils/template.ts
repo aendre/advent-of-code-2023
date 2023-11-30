@@ -7,9 +7,9 @@ import { AocPuzzle } from '../utils/aoc.js';
 import { patternMatch } from '../utils/patterns.js';
 
 export default function solve(aoc: AocPuzzle) {
-  const rows = aoc.inputE.split('\\n')
+  const input = aoc.inputE.split('\\n')
   // .map(row => parseInt(row, 10))
-  console.log(rows)
+  console.log(input)
 
   // aoc.part1('changeme')
   // aoc.part2('changeme2')
