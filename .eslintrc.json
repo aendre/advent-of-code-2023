@@ -20,7 +20,7 @@
       "no-console": "off",
       "max-len": "off",
       "import/prefer-default-export" : "off",
-      "semi": 1,
+      "semi": "off",
       "@typescript-eslint/semi": "off",
       "arrow-parens": ["error", "as-needed"],
       "@typescript-eslint/no-unused-vars": "off",
