@@ -17,8 +17,7 @@ export type AocPuzzle = {
   input: string, // content of input.txt
   inputE: string, // content of example.txt
   parseInt: (input: string) => number
-  part1: (result: unknown) => void
-  part2: (result: unknown) => void
+  answer: (result: unknown, copy?:boolean) => void
 }
 
 function parseAsInt(input: string) {
@@ -95,22 +94,20 @@ export function getPuzzleInputExample() {
   return readInput('example.txt');
 }
 
-export function part(nr: number, solution: unknown) {
-  console.log(blue('>'));
-  console.log(blue(`> 🎉 Part ${nr}: `), blue.bold(`${solution}`));
-  console.log(blue('>'));
-}
-
-export function part1(solution: unknown) {
-  return part(1, solution)
-}
-export function part2(solution: unknown) {
-  return part(2, solution)
-}
-
 function pbcopy(data:string) {
   const proc = spawn('pbcopy');
   proc.stdin.write(data); proc.stdin.end();
+}
+
+export function answer(solution: unknown, copy = true) {
+  const stringSolution = `${solution}`
+  const canCopy = typeof stringSolution === 'string' && typeof solution !== 'undefined' && solution !== null && copy === true
+  if (canCopy) {
+    pbcopy(stringSolution)
+  }
+  console.log(blue('>'));
+  console.log(blue('> 🎉 Solution: '), blue.white.bold(`${solution}`), canCopy ? blue.yellow.bold(' Copied to clipboard!') : '');
+  console.log(blue('>'));
 }
 
 export async function startDay() {
@@ -126,8 +123,7 @@ export async function startDay() {
     puzzle,
     input,
     inputE: exampleInput,
-    part1,
-    part2,
+    answer,
     parseInt: parseAsInt,
   }
 

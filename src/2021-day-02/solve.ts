@@ -25,5 +25,5 @@ export default function solve(aoc: AocPuzzle) {
   })
 
   console.log(pos)
-  aoc.part1(pos.x * pos.y);
+  aoc.answer(pos.x * pos.y);
 }

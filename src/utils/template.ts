@@ -11,8 +11,7 @@ export default function solve(aoc: AocPuzzle) {
 
   console.log(input)
 
-  // aoc.part1('changeme')
-  // aoc.part2('changeme2')
+  // aoc.answer('changeme')
 }
 `;
 export function createTemplate(dirName: string) {

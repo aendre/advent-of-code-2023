@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import math from '../utils/math.js';
 import { AocPuzzle } from '../utils/aoc.js';
 
 export default function solve(aoc: AocPuzzle) {
@@ -22,6 +21,6 @@ export default function solve(aoc: AocPuzzle) {
       }
     });
 
-  aoc.part1(count);
-  aoc.part2(count2);
+  aoc.answer(count);
+  aoc.answer(count2);
 }

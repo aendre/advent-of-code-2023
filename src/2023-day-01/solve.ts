@@ -1,6 +1,7 @@
 import { number } from 'mathjs';
 import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
+import { answer } from '../utils/aoc';
 
 export default function solve(aoc: AocPuzzle) {
   const input = aoc.input
@@ -20,5 +21,5 @@ export default function solve(aoc: AocPuzzle) {
     return parseInt(`${_.first(numbers)}${_.last(numbers)}`, 10)
   })
 
-  aoc.part1(_.sum(result))
+  aoc.answer(_.sum(result), false)
 }
