@@ -104,6 +104,14 @@ export class AocPuzzle {
   static parseInt(input: string) {
     return parseInt(input, 10)
   }
+
+  static decimalToBinary(nr: number) {
+    return nr.toString(2);
+  }
+
+  static binaryToDecimal(str: string) {
+    return parseInt(str, 2);
+  }
 }
 
 export async function startDay() {
