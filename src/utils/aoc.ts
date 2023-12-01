@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as fs from 'fs';
 import _ from 'lodash';
 import { red, blue, yellow } from 'ansis';
+import { spawn } from 'child_process';
 import { createTemplate } from './template.js';
 
 export type AocPuzzleInfo = {
@@ -101,10 +102,15 @@ export function part(nr: number, solution: unknown) {
 }
 
 export function part1(solution: unknown) {
-  part(1, solution)
+  return part(1, solution)
 }
 export function part2(solution: unknown) {
-  part(2, solution)
+  return part(2, solution)
+}
+
+function pbcopy(data:string) {
+  const proc = spawn('pbcopy');
+  proc.stdin.write(data); proc.stdin.end();
 }
 
 export async function startDay() {
