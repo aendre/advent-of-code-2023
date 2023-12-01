@@ -16,6 +16,8 @@ export const math = create(all, mathConfig)
 
 /**
  *  Match tokens from string
+ *  Example:
+ *    const [subject, count] = patternMatch(line, '$str was striked $int times')
  */
 export function patternMatch(str: string, matcher:string) {
   // https://digitalfortress.tech/tips/top-15-commonly-used-regex/

@@ -4,14 +4,14 @@ import { AocPuzzle } from '../utils/aoc.js';
 export default function solve(aoc: AocPuzzle) {
   let count = 0;
 
-  const result = aoc.input.split('\n')
+  const result = aoc.input().split('\n')
     .map(i => parseInt(i, 10))
     .forEach((value, index, arr) => {
       count += (index > 0 && value > arr[index - 1]) ? 1 : 0;
     });
 
   let count2 = 0;
-  const result2 = aoc.input.split('\n')
+  const result2 = aoc.input().split('\n')
     .map(i => parseInt(i, 10))
     .forEach((value, index, arr) => {
       if (index > 2) {
@@ -21,6 +21,6 @@ export default function solve(aoc: AocPuzzle) {
       }
     });
 
-  aoc.answer(count);
-  aoc.answer(count2);
+  AocPuzzle.answer(count);
+  AocPuzzle.answer(count2);
 }

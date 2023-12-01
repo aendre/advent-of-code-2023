@@ -3,7 +3,7 @@ import { AocPuzzle } from '../utils/aoc.js';
 import { Point2D } from '../utils/2D.js';
 
 export default function solve(aoc: AocPuzzle) {
-  const rows = aoc.input.lines()
+  const rows = aoc.input().lines()
     .map(row => {
       const [command, step] = row.split(' ')
       return { command, step: parseInt(step, 10) }
@@ -25,5 +25,5 @@ export default function solve(aoc: AocPuzzle) {
   })
 
   console.log(pos)
-  aoc.answer(pos.x * pos.y);
+  AocPuzzle.answer(pos.x * pos.y);
 }

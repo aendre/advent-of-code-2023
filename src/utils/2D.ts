@@ -171,6 +171,14 @@ export class Point2D<T = unknown> {
     return this.point;
   }
 
+  manhattanDistanceTo(p: Point2D) {
+    return Math.abs(this.x - p.x) + Math.abs(this.y - p.y)
+  }
+
+  euclideanDistanceTo(p: Point2D) {
+    return math.distance(this.xy, p.xy)
+  }
+
   toObject() {
     return {
       x: this.x,

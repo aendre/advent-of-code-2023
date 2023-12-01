@@ -4,14 +4,18 @@ import { yellow } from 'ansis';
 export const solveTemplate = `import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
 
+// Array:  _.first, _.last, _.chunk, _.difference, _.intersection, _.union, _.uniq
+// String: trim, endsWith, startsWith, _.words
+// Math: _.max, _.min, _.mean, _.sum
+
 export default function solve(aoc: AocPuzzle) {
-  const input = aoc.inputE
-  //  .lines()
-  //  .map(aoc.parseInt)
+  const input = aoc.inputE()
+  // .lines()
+  // .map(AocPuzzle.parseInt)
 
   console.log(input)
 
-  // aoc.answer('changeme')
+  // AocPuzzle.answer('changeme')
 }
 `;
 export function createTemplate(dirName: string) {
