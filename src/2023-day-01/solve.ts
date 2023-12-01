@@ -1,3 +1,4 @@
+import { number } from 'mathjs';
 import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
 
@@ -16,12 +17,7 @@ export default function solve(aoc: AocPuzzle) {
 
   const result = input.map(item => {
     const numbers = item.split('').filter(nr => !Number.isNaN(parseInt(nr, 10)))
-    const first = numbers.shift()!;
-    let last = numbers.pop();
-    if (typeof last === 'undefined') {
-      last = first
-    }
-    return parseInt(first + last, 10)
+    return parseInt(`${_.first(numbers)}${_.last(numbers)}`, 10)
   })
 
   aoc.part1(_.sum(result))
