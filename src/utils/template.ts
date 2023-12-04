@@ -7,6 +7,7 @@ import { AocPuzzle } from '../utils/aoc.js';
 // Array:  _.first, _.last, _.chunk, _.difference, _.intersection, _.union, _.uniq
 // String: trim, endsWith, startsWith, _.words
 // Math: _.max, _.min, _.mean, _.sum
+// Utils: _.times, _.matches, _.over
 
 export default function solve(aoc: AocPuzzle) {
   const input = aoc.inputE()
