@@ -1,12 +1,12 @@
 import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
 
-function cleverKinds(hand:string) {
+function handScore(hand:string) {
   const lengths = Array.from(hand).map(letter => hand.split(letter).length - 1)
   return AocPuzzle.parseInt(lengths.sort((a, b) => b - a).join(''))
 }
 
-function jokerKinds(hand:string) {
+function jokerScore(hand:string) {
   const lengths = Array.from(hand).filter(c => c !== '0').map(letter => ({
     letter,
     occ: hand.split(letter).length - 1,
@@ -15,9 +15,9 @@ function jokerKinds(hand:string) {
   const char = _.maxBy(lengths, 'occ')
 
   if (typeof char === 'undefined') {
-    return cleverKinds(hand)
+    return handScore(hand)
   }
-  return cleverKinds(hand.replaceAll('0', char.letter))
+  return handScore(hand.replaceAll('0', char.letter))
 }
 
 export default function solve(aoc: AocPuzzle) {
@@ -36,8 +36,8 @@ export default function solve(aoc: AocPuzzle) {
     })
 
   input.sort((a, b) => {
-    const kindA = jokerKinds(a.hand);
-    const kindB = jokerKinds(b.hand);
+    const kindA = jokerScore(a.hand);
+    const kindB = jokerScore(b.hand);
 
     if (kindA !== kindB) {
       return kindB - kindA;
