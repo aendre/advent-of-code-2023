@@ -8,15 +8,13 @@ type Node = {
 
 function countStepsToZ(start:string, instructions:string[], network:Map<string, Node>, ending:string) {
   let steps = 0;
-  let found = false;
   let location = start
-  while (!found) {
+  while (!location.endsWith(ending)) {
     const currentInstruction = instructions[steps % (instructions.length)] as 'L' | 'R'
     const node = network.get(location);
     if (node) {
       location = node[currentInstruction]
     }
-    found = location.endsWith(ending)
     steps += 1;
   }
   return steps
