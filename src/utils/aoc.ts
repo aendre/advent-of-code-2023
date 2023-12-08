@@ -79,6 +79,7 @@ export class AocPuzzle {
   private readInput(filename: string) {
     const filePath = `src/${this.puzzle.dirName}/${filename}`;
     const fileContent = fs.readFileSync(filePath, 'utf8');
+    console.time('AoC execution'); // Start counting execution duration from the moment an input in read
     return fileContent;
   }
 
@@ -124,7 +125,6 @@ export async function startDay() {
   const p = new AocPuzzle(puzzle)
 
   console.log(red('----------------------------------------------------------'));
-  console.time('AoC execution');
   (await import(`../${puzzle.dirName}/solve.js`)).default(p);
   console.log(red('----------------------------------------------------------'));
   console.timeEnd('AoC execution');
