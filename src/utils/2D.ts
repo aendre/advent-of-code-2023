@@ -14,6 +14,12 @@ export enum Direction {
   StayStill = 'STAY_STILL',
 }
 
+export enum RotationDirection {
+  ClockWise = 'CLOCKWISE',
+  CounterClockWise = 'COUNTERCLOCKWISE',
+  NoRotation = 'NOROTATION',
+}
+
 export function moveOnCartesianCoordinateSystem(direction: Direction) {
   const map: Record<Direction, Coordinate> = {
     [Direction.Left]: [-1, 0],
@@ -42,6 +48,25 @@ export function moveOnCanvas(direction: Direction) {
     [Direction.StayStill]: [0, 0],
   };
   return map[direction];
+}
+
+export function commandToRotationDirection(command:string): RotationDirection {
+  switch (command.toLowerCase()) {
+    case 'l':
+    case 'left':
+    case '<':
+    case RotationDirection.CounterClockWise:
+      return RotationDirection.CounterClockWise;
+
+    case 'r':
+    case '>':
+    case 'right':
+    case RotationDirection.ClockWise:
+      return RotationDirection.ClockWise;
+
+    default:
+      return RotationDirection.NoRotation;
+  }
 }
 
 export function commandToDirection(command:string): Direction {
@@ -155,6 +180,15 @@ export class Point2D<T = unknown> {
     return this.y >= min && this.y <= max;
   }
 
+  get4Neighbours(): Point2D[] {
+    return [
+      Direction.Up,
+      Direction.Left,
+      Direction.Down,
+      Direction.Right,
+    ].map(direction => this.stepOnCanvas(direction))
+  }
+
   get key() {
     return `${this.x}-${this.y}`;
   }
@@ -214,3 +248,5 @@ export function oppositeDirection(direction: Direction) : Direction {
     default: return direction;
   }
 }
+
+// export function
