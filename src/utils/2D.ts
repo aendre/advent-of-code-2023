@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { math } from '../utils/libs.js';
 
 export type Coordinate = [number, number];
@@ -55,13 +56,13 @@ export function commandToRotationDirection(command:string): RotationDirection {
     case 'l':
     case 'left':
     case '<':
-    case RotationDirection.CounterClockWise:
+    case RotationDirection.CounterClockWise.toLowerCase():
       return RotationDirection.CounterClockWise;
 
     case 'r':
     case '>':
     case 'right':
-    case RotationDirection.ClockWise:
+    case RotationDirection.ClockWise.toLowerCase():
       return RotationDirection.ClockWise;
 
     default:
@@ -126,14 +127,14 @@ export function commandToDirection(command:string): Direction {
   }
 }
 
-type IsUnkown<T> = T extends unknown ? T : never
+type IsUnknown<T> = T extends unknown ? T : never
 
 export class Point2D<T = unknown> {
   private point : Coordinate;
 
-  content : IsUnkown<T> | undefined;
+  content : IsUnknown<T> | undefined;
 
-  constructor(p: Coordinate, c?: IsUnkown<T>) {
+  constructor(p: Coordinate, c?: IsUnknown<T>) {
     this.point = p;
     this.content = c;
   }
@@ -234,6 +235,71 @@ export function boundingBox(points: Point2D[]) {
   };
 }
 
+export class Grid {
+  width = 0
+
+  height = 0
+
+  points = new Map<string, Point2D>()
+
+  constructor(width = 0, height = 0) {
+    this.width = width;
+    this.height = height
+  }
+
+  fromString(input:string) {
+    const rows = input.split('\n');
+    this.height = rows.length;
+    this.width = Math.max(...rows.map(i => i.length)); // Make sure we check the farthest character
+
+    for (let y = 0; y < this.height; y += 1) {
+      for (let x = 0; x < this.width; x += 1) {
+        const p = new Point2D([x, y], rows[y][x]);
+        this.points.set(p.key, p)
+      }
+    }
+    return this;
+  }
+
+  fromArray(arr:Point2D[], width?: number, height?: number) {
+    const map = new Map(arr.map(p => [p.key, p]))
+    return this.fromMap(map, width, height);
+  }
+
+  fromMap(map:Map<string, Point2D>, width?: number, height?: number) {
+    this.points = new Map(map)
+    this.width = width ?? this.width;
+    this.height = height ?? this.height;
+    return this;
+  }
+
+  filter(func: (value:Point2D, key:string, coord: Coordinate) => boolean): Grid {
+    const g = new Grid()
+    const filtered = [...this.points].filter(item => func(item[1], item[0], item[1].xy))
+    return g.fromMap(new Map(filtered), this.width, this.height)
+  }
+
+  asArray(): Point2D[] {
+    return [...this.points].map(v => v[1])
+  }
+
+  setWidth(width: number) {
+    this.width = width;
+  }
+
+  setHeight(height: number) {
+    this.height = height;
+  }
+
+  column(columnIndex:number) {
+    return this.filter((v, k, cord) => cord[0] === columnIndex)
+  }
+
+  row(rowIndex:number) {
+    return this.filter((v, k, cord) => cord[1] === rowIndex)
+  }
+}
+
 export function oppositeDirection(direction: Direction) : Direction {
   switch (direction) {
     case Direction.Down: return Direction.Up;
@@ -249,4 +315,32 @@ export function oppositeDirection(direction: Direction) : Direction {
   }
 }
 
-// export function
+export function rotate90deg(direction: Direction, r: RotationDirection | string): Direction {
+  const rotation = commandToRotationDirection(r)
+  if (rotation === RotationDirection.ClockWise) {
+    switch (direction) {
+      case Direction.Down: return Direction.Left;
+      case Direction.Left: return Direction.Up;
+      case Direction.Up: return Direction.Right;
+      case Direction.Right: return Direction.Down;
+      case Direction.DiagonalDownLeft: return Direction.DiagonalUpLeft;
+      case Direction.DiagonalUpLeft: return Direction.DiagonalUpRight;
+      case Direction.DiagonalUpRight: return Direction.DiagonalDownRight;
+      case Direction.DiagonalDownRight: return Direction.DiagonalDownLeft;
+      default: return direction;
+    }
+  } else if (rotation === RotationDirection.CounterClockWise) {
+    switch (direction) {
+      case Direction.Down: return Direction.Right;
+      case Direction.Right: return Direction.Up;
+      case Direction.Up: return Direction.Left;
+      case Direction.Left: return Direction.Down;
+      case Direction.DiagonalDownLeft: return Direction.DiagonalDownRight;
+      case Direction.DiagonalDownRight: return Direction.DiagonalUpRight;
+      case Direction.DiagonalUpRight: return Direction.DiagonalUpLeft;
+      case Direction.DiagonalUpLeft: return Direction.DiagonalDownLeft;
+      default: return direction;
+    }
+  }
+  return direction
+}

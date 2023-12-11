@@ -29,6 +29,9 @@
       "prefer-const": "off",
       "no-autofix/prefer-const": "warn",
       "@typescript-eslint/no-throw-literal": "off",
-      "no-extend-native": "off"
+      "no-extend-native": "off",
+      "max-classes-per-file": "off",
+      "no-labels": "off",
+      "no-continue": "off"
     }
 }
