@@ -1,8 +1,12 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
-import { Direction, Point2D, oppositeDirection } from '../utils/2D.js';
+import {
+  Direction, Point2D, RotationDirection, oppositeDirection, rotate45deg, rotate90deg,
+} from '../utils/2D.js';
 
 const pipeMap: Record<string, Direction[]> = {
   L: [Direction.Up, Direction.Right],
@@ -14,95 +18,86 @@ const pipeMap: Record<string, Direction[]> = {
   S: [Direction.StayStill, Direction.StayStill],
 }
 
-export function getNeighbours(start: Point2D, map:Map<string, Point2D>) : Point2D[] {
-  const neighbours: Point2D[] = []
-
-  start.get4Neighbours().forEach(p => {
-    const newPoint = map.get(p.key)
-    if (typeof newPoint !== 'undefined') {
-      neighbours.push(newPoint)
-    }
-  })
-
-  return neighbours;
-}
-
-function getLoop(start:Point2D, startDirection:Direction, map:Map<string, Point2D<string>>):string[] {
+function getLoop(start:Point2D, startDirection:Direction, map:Map<string, Point2D>) {
   let nextDirection = startDirection
   let current = map.get(start.stepOnCanvas(nextDirection).key)
-  const loop : string[] = [current!.key]
+  const loop = [{ key: current!.key, dir: nextDirection }]
   while (typeof current !== 'undefined' && current.key !== start.key) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     nextDirection = pipeMap[(current.content as string)]
       .filter(d => d !== oppositeDirection(nextDirection)).pop()!
     current = map.get(current.stepOnCanvas(nextDirection).key)!
-    loop.push(current.key)
+    loop.push({ key: current.key, dir: nextDirection })
   }
   return loop
 }
 
-function wayOut(start:Point2D, map:Map<string, Point2D>, visited:string[], width:number, height:number):boolean {
-  // you are out
-  if (start.x === 0 || start.y === 0 || start.x === width - 1 || start.y === height - 1) {
-    return true;
-  }
-  const neigh = getNeighbours(start, map).filter(p => !visited.includes(p.key))
-  let isThereAWayOut = false;
-  for (let i = 0; i < neigh.length; i += 1) {
-    isThereAWayOut = wayOut(neigh[i], map, [...visited, neigh[i].key], width, height)
-    if (isThereAWayOut) {
-      break
+function getInnerTiles(loop:{ key:string, dir:Direction }[], map:Map<string, Point2D<string>>, rotation: RotationDirection, width:number, height:number) {
+  const visited = new Set<string>();
+  for (let i = 0; i < loop.length; i += 1) {
+    const tileInLoop = map.get(loop[i].key)!
+    let tile = tileInLoop;
+
+    let newDirection = rotate90deg(loop[i].dir, rotation);
+
+    if (['7', 'L'].includes(`${tileInLoop.content}`)) {
+      newDirection = rotate45deg(loop[i].dir, rotation);
+    } else if (['F', 'J'].includes(`${tileInLoop.content}`)) {
+      newDirection = rotate90deg(rotate45deg(loop[i].dir, rotation), rotation);
+    }
+    while (true) {
+      // console.log('steping from ', tile)
+      tile = tile.stepOnCanvas(newDirection);
+      // console.log('to ', tile)
+      const isPipe = typeof loop.find(l => l.key === tile.key) !== 'undefined';
+      const isWall = tile.x > width - 1 || tile.y > height - 1 || tile.x < 0 || tile.y < 0;
+      if (!isPipe && !isWall && !visited.has(tile.key)) {
+        visited.add(tile.key)
+      }
+      if (isPipe) {
+        break;
+      }
+      if (isWall) {
+        // console.log('i hit the wall:', tile, rotation, newDirection, isCorner)
+        return 0;
+      }
     }
   }
 
-  return isThereAWayOut
+  console.log(visited)
+
+  return visited.size;
 }
 
 export default function solve(aoc: AocPuzzle) {
-  const grid:Point2D[] = [];
   const map = new Map<string, Point2D<string>>()
-  const emptyMap = new Map<string, Point2D<string>>()
-  let S: Point2D;
-
-  const input = aoc.input().lines();
+  let S = new Point2D([0, 0], 'init');
+  const input = aoc.inputE().lines();
   const height = input.length;
   const width = input[0].length;
 
   input.forEach((line, y) => line.split('').forEach((char, x) => {
-    const p = new Point2D([x, y], char)
     if (char !== '.') {
-      grid.push(p)
+      const p = new Point2D([x, y], char)
       map.set(p.key, p)
-      if (char === 'S') {
-        S = p
-      }
+      if (char === 'S') { S = p }
     }
   }))
 
-  const dir = Direction.Left; // PROD Staring direction
-  // const dir = Direction.Down; // DEV Staring direction
-  const loop = getLoop(S, dir, map)
-  const l = loop.length;
+  // const startingDirection = Direction.Right; // PROD Staring direction
+  const startingDirection = Direction.Down; // DEV Staring direction
+  const loop = getLoop(S, startingDirection, map)
 
   // Part 1
+  const l = loop.length;
   const result = Math.floor(l / 2) + (l % 2)
-  AocPuzzle.answer(result)
+  AocPuzzle.answer(result, false)
 
   // Part 2
-  input.forEach((line, y) => line.split('').forEach((char, x) => {
-    const p = new Point2D([x, y], char)
-    if (!loop.includes(p.key)) {
-      emptyMap.set(p.key, p)
-    }
-  }))
-
-  let part2 = 0
-  // emptyMap.forEach((p, key) => {
-  //   if (!wayOut(p, emptyMap, [], width, height)) {
-  //     part2 += 1;
-  //   }
-  // })
+  const part2CCW = getInnerTiles(loop, map, RotationDirection.CounterClockWise, width, height)
+  const part2CW = getInnerTiles(loop, map, RotationDirection.ClockWise, width, height)
 
   // 498 - too high
-  AocPuzzle.answer(part2)
+  // 393 - too low
+  AocPuzzle.answer(Math.max(part2CCW, part2CW))
 }

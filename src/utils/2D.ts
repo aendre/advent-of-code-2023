@@ -344,3 +344,33 @@ export function rotate90deg(direction: Direction, r: RotationDirection | string)
   }
   return direction
 }
+
+export function rotate45deg(direction: Direction, r: RotationDirection | string): Direction {
+  const rotation = commandToRotationDirection(r)
+  if (rotation === RotationDirection.ClockWise) {
+    switch (direction) {
+      case Direction.Down: return Direction.DiagonalDownLeft;
+      case Direction.DiagonalDownLeft: return Direction.Left;
+      case Direction.Left: return Direction.DiagonalUpLeft;
+      case Direction.DiagonalUpLeft: return Direction.Up;
+      case Direction.Up: return Direction.DiagonalUpRight;
+      case Direction.DiagonalUpRight: return Direction.Right;
+      case Direction.Right: return Direction.DiagonalDownRight;
+      case Direction.DiagonalDownRight: return Direction.Down;
+      default: return direction;
+    }
+  } else if (rotation === RotationDirection.CounterClockWise) {
+    switch (direction) {
+      case Direction.Down: return Direction.DiagonalDownRight;
+      case Direction.DiagonalDownRight: return Direction.Right;
+      case Direction.Right: return Direction.DiagonalUpRight;
+      case Direction.DiagonalUpRight: return Direction.Up;
+      case Direction.Up: return Direction.DiagonalUpLeft;
+      case Direction.DiagonalUpLeft: return Direction.Left;
+      case Direction.Left: return Direction.DiagonalDownLeft;
+      case Direction.DiagonalDownLeft: return Direction.Down;
+      default: return direction;
+    }
+  }
+  return direction
+}
