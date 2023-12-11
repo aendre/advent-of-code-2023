@@ -20,16 +20,16 @@ const pipeMap: Record<string, Direction[]> = {
 
 function getLoop(start:Point2D, startDirection:Direction, map:Grid) {
   let nextDirection = startDirection
-  let current = map.points.get(start.stepOnCanvas(nextDirection).key)
-  const loop = [{ key: current!.key, dir: nextDirection }]
+  let current = map.points.get(start.stepOnCanvas(nextDirection).key)!
+  const loop = [current]
   while (typeof current !== 'undefined' && current.key !== start.key) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     nextDirection = pipeMap[(current.content as string)]
       .filter(d => d !== oppositeDirection(nextDirection)).pop()!
     current = map.points.get(current.stepOnCanvas(nextDirection).key)!
-    loop.push({ key: current.key, dir: nextDirection })
+    loop.push(current)
   }
-  return loop
+  return new Grid().fromArray(loop, map.width, map.height)
 }
 
 export default function solve(aoc: AocPuzzle) {
@@ -38,21 +38,32 @@ export default function solve(aoc: AocPuzzle) {
   const pipes = map.filter(p => p.content !== '.')
   const S = pipes.filter(p => p.content === 'S').toArray().pop()!;
 
-  console.log(S)
   const startingDirection = Direction.Right; // PROD Staring direction
   // const startingDirection = Direction.Down; // DEV Staring direction
   const loop = getLoop(S, startingDirection, pipes)
 
   // Part 1
-  const l = loop.length;
+  const l = loop.points.size;
   const result = Math.floor(l / 2) + (l % 2)
   AocPuzzle.answer(result, false)
 
-  // // Part 2
-  // const part2CCW = getInnerTiles(loop, map, RotationDirection.CounterClockWise, width, height)
-  // const part2CW = getInnerTiles(loop, map, RotationDirection.ClockWise, width, height)
+  // Part 2 - kapja be
+  let sum = 0
+  for (let i = 0; i < map.height; i++) {
+    const notInTheLoop = map.row(i).toArray().filter(p => typeof loop.points.get(p.key) === 'undefined')
+    sum += _.sum(notInTheLoop.map(p => {
+      // count how many times |, J, L appear to the left of it
+      let times = _.range(0, p.x).map(x => {
+        const tileInTheLoop = loop.points.get(new Point2D([x, p.y]).key)
+        return typeof tileInTheLoop !== 'undefined' && ['|', 'L', 'J'].includes(tileInTheLoop.content as string)
+      }).filter(pp => pp === true).length
 
-  // // 498 - too high
-  // // 393 - too low
-  // AocPuzzle.answer(Math.max(part2CCW, part2CW))
+      return (times % 2 === 1) ? 1 : 0
+    }))
+  }
+
+  // 498 - too high
+  // 393 - too low
+  // 399 - wrong
+  AocPuzzle.answer(sum)
 }

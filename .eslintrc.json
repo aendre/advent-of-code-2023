@@ -32,6 +32,7 @@
       "no-extend-native": "off",
       "max-classes-per-file": "off",
       "no-labels": "off",
-      "no-continue": "off"
+      "no-continue": "off",
+      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
     }
 }

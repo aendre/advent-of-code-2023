@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import ansis from 'ansis';
 import { math } from '../utils/libs.js';
 
 export type Coordinate = [number, number];
@@ -281,6 +282,18 @@ export class Grid {
 
   toArray(): Point2D[] {
     return [...this.points].map(v => v[1])
+  }
+
+  toString() :string {
+    let str = ''
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const c = this.points.get(new Point2D([x, y]).key)
+        str += typeof c === 'undefined' ? ansis.cyan('.') : c.content
+      }
+      str += '\n'
+    }
+    return str
   }
 
   setWidth(width: number) {
