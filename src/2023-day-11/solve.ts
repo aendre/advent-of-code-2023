@@ -7,18 +7,18 @@ function expandUniverse(galaxies:Grid, grid:Grid, expandBy = 1):Grid {
 
   // Each row
   for (let i = grid.height - 1; i >= 0; i -= 1) {
-    const g = galaxies.row(i).asArray()
+    const g = galaxies.row(i).toArray()
     if (g.length === 0) {
-      const points = expandedGalaxies.asArray().map(point => (point.y > i ? point.move([0, expandBy]) : point))
+      const points = expandedGalaxies.toArray().map(point => (point.y > i ? point.move([0, expandBy]) : point))
       expandedGalaxies = new Grid().fromArray(points)
     }
   }
 
   // Each column
   for (let i = grid.width - 1; i >= 0; i -= 1) {
-    const g = galaxies.column(i).asArray()
+    const g = galaxies.column(i).toArray()
     if (g.length === 0) {
-      const points = expandedGalaxies.asArray().map(point => (point.x > i ? point.move([expandBy, 0]) : point))
+      const points = expandedGalaxies.toArray().map(point => (point.x > i ? point.move([expandBy, 0]) : point))
       expandedGalaxies = new Grid().fromArray(points)
     }
   }
@@ -28,7 +28,7 @@ function expandUniverse(galaxies:Grid, grid:Grid, expandBy = 1):Grid {
 
 function calculatePathLength(galaxies:Grid) {
   let pathLength = 0
-  galaxies.asArray().forEach((g, startIndex, gg) => {
+  galaxies.toArray().forEach((g, startIndex, gg) => {
     _.range(startIndex + 1, gg.length).forEach(endIndex => {
       const from = gg[startIndex];
       const to = gg[endIndex];

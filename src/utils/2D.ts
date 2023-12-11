@@ -279,7 +279,7 @@ export class Grid {
     return g.fromMap(new Map(filtered), this.width, this.height)
   }
 
-  asArray(): Point2D[] {
+  toArray(): Point2D[] {
     return [...this.points].map(v => v[1])
   }
 
