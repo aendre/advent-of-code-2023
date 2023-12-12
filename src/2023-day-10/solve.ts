@@ -53,7 +53,7 @@ export default function solve(aoc: AocPuzzle) {
     const notInTheLoop = map.row(i).toArray().filter(p => typeof loop.points.get(p.key) === 'undefined')
     sum += _.sum(notInTheLoop.map(p => {
       // count how many times |, J, L appear to the left of it
-      let times = _.range(0, p.x).map(x => {
+      const times = _.range(0, p.x).map(x => {
         const tileInTheLoop = loop.points.get(new Point2D([x, p.y]).key)
         return typeof tileInTheLoop !== 'undefined' && ['|', 'L', 'J'].includes(tileInTheLoop.content as string)
       }).filter(pp => pp === true).length
