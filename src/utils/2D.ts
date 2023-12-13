@@ -284,24 +284,56 @@ export class Grid {
     return [...this.points].map(v => v[1])
   }
 
-  toString() :string {
+  toString(onlyBoundingBox = true) :string {
+    let startX = 0;
+    let startY = 0;
+    let endX = this.width - 1;
+    let endY = this.height - 1;
+
+    // Take the actual area into account bordered by the position of the points
+    if (onlyBoundingBox) {
+      const xs: number[] = [];
+      const ys: number[] = [];
+      this.toArray().forEach(p => {
+        xs.push(p.x)
+        ys.push(p.y)
+      });
+
+      startX = Math.min(...xs);
+      startY = Math.min(...ys);
+      endX = Math.max(...xs);
+      endY = Math.max(...ys);
+    }
+
     let str = ''
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
+    for (let y = startY; y <= endY; y++) {
+      for (let x = startX; x <= endX; x++) {
         const c = this.points.get(new Point2D([x, y]).key)
         str += typeof c === 'undefined' ? ansis.cyan('.') : c.content
       }
-      str += '\n'
+      str += y === endY ? '' : '\n'
     }
     return str
   }
 
+  clone() {
+    return this.filter(() => true)
+  }
+
   setWidth(width: number) {
     this.width = width;
+    return this;
   }
 
   setHeight(height: number) {
     this.height = height;
+    return this;
+  }
+
+  setSize(width:number, height:number) {
+    this.width = width;
+    this.height = height;
+    return this;
   }
 
   column(columnIndex:number) {
