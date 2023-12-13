@@ -2,10 +2,11 @@ import { _, math, patternMatch } from '../utils/libs.js';
 import { AocPuzzle } from '../utils/aoc.js';
 import { Grid, Point2D } from '../utils/2D.js';
 
-function getMirrorPosition(valley:Grid, direction: 'HORIZONTAL' | 'VERTICAL') {
+function getMirrorPosition(valley:Grid, direction: 'HORIZONTAL' | 'VERTICAL', ignoreScore = -1) {
   let mirroringIndex = 0;
   const end = direction === 'HORIZONTAL' ? valley.height : valley.width;
   const funcName = direction === 'HORIZONTAL' ? 'row' : 'column';
+  const multiplier = (direction === 'HORIZONTAL' ? 100 : 1)
 
   for (let position = 0; position < end; position++) {
     const range = Math.min(end - position, position, Math.floor(end / 2))
@@ -15,13 +16,13 @@ function getMirrorPosition(valley:Grid, direction: 'HORIZONTAL' | 'VERTICAL') {
     if (left.length === 0 || right.length === 0) continue;
 
     const isMirror = left.every((columnIndex, index) => valley[funcName](columnIndex).toString() === valley[funcName](right[index]).toString())
-    if (isMirror) {
+    if (isMirror && ignoreScore !== (position * multiplier)) {
       mirroringIndex = position;
       break;
     }
   }
 
-  return mirroringIndex * (direction === 'HORIZONTAL' ? 100 : 1)
+  return mirroringIndex * multiplier
 }
 
 export default function solve(aoc: AocPuzzle) {
@@ -33,23 +34,21 @@ export default function solve(aoc: AocPuzzle) {
   AocPuzzle.answer(_.sum(part1))
 
   // Part 2
-  const part2 = valleys.map(valley => {
+  const part2 = valleys.map((valley, vindex) => {
     const originalV = getMirrorPosition(valley, 'VERTICAL');
     const originalH = getMirrorPosition(valley, 'HORIZONTAL');
     let score = 0;
-    // console.log('original score', originalV, originalH)
     // eslint-disable-next-line no-restricted-syntax
     for (const smudge of valley.points.values()) {
       const newValley = valley.clone();
       const newSmudge = smudge.content === '.' ? '#' : '.';
       newValley.points.set(smudge.key, new Point2D([smudge.x, smudge.y], newSmudge))
-      const newV = getMirrorPosition(newValley, 'VERTICAL');
-      const newH = getMirrorPosition(newValley, 'HORIZONTAL');
+      const newV = getMirrorPosition(newValley, 'VERTICAL', originalV);
+      const newH = getMirrorPosition(newValley, 'HORIZONTAL', originalH);
+
       // we have found it
       if ((originalH !== newH || originalV !== newV) && ((newV + newH) !== 0)) {
         score = newV !== originalV && newV !== 0 ? newV : newH;
-        // console.log('new score is', score)
-        // console.log(newValley.toString())
         break;
       }
     }
@@ -57,7 +56,6 @@ export default function solve(aoc: AocPuzzle) {
     return score
   })
 
-  console.log(valleys.length)
   // 23846 - is too low
   // 26163 - is too low
   AocPuzzle.answer(_.sum(part2))
